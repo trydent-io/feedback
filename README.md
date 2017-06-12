@@ -1,2 +1,2 @@
 # feedback
-A tribute demo for Flashback game
+A tribute demo to Flashback
