@@ -14,14 +14,14 @@
 
   export default {
     mounted () {
-      this.queue = new createjs.LoadQueue(false)
-      this.queue.addEventListener('complete', this.onComplete)
-      this.queue.loadManifest(this.manifest, true, '/static/')
+      this.loader = new createjs.LoadQueue(false)
+      this.loader.addEventListener('complete', this.onComplete)
+      this.loader.loadManifest(this.manifest, true, '/static/')
     },
     data: () => ({
       loading: true,
       playground: null,
-      queue: null,
+      loader: null,
       background: null,
       manifest: [{
         src: 'test00.png',
@@ -38,7 +38,7 @@
         this.playground = new createjs.Stage('playground')
 
         this.background = new createjs.Shape()
-        this.background.graphics.beginBitmapFill(this.queue.getResult('background')).drawRect(0, 0, this.width, this.height)
+        this.background.graphics.beginBitmapFill(this.loader.getResult('background')).drawRect(0, 0, this.width, this.height)
 
         this.playground.addChild(this.background)
         this.playground.update()
@@ -55,7 +55,7 @@
   }
 
   body {
-    background-color: #434A54;
+    background-color: #434A54 !important;
     display: flex;
     justify-content: center;
     align-content: center;

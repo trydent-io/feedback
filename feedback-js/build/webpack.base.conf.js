@@ -32,8 +32,6 @@ module.exports = {
       // jquery
       createjs: 'createjs-easeljs',
       'window.createjs': 'createjs-easeljs',
-      // jQuery: 'jquery',
-      // 'window.jQuery': 'jquery',
       'semantic-ui-css': 'semantic-ui-css'
     })
   ],
@@ -41,7 +39,7 @@ module.exports = {
     rules: [
       {
         test: /\.(js|vue)$/,
-        queue: 'eslint-loader',
+        loader: 'eslint-loader',
         enforce: 'pre',
         include: [resolve('src'), resolve('test')],
         options: {
@@ -50,17 +48,17 @@ module.exports = {
       },
       {
         test: /\.vue$/,
-        queue: 'vue-loader',
+        loader: 'vue-loader',
         options: vueLoaderConfig
       },
       {
         test: /\.js$/,
-        queue: 'babel-loader',
+        loader: 'babel-loader',
         include: [resolve('src'), resolve('test')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-        queue: 'url-loader',
+        loader: 'url-loader',
         options: {
           limit: 10000,
           name: utils.assetsPath('img/[name].[hash:7].[ext]')
@@ -68,7 +66,7 @@ module.exports = {
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        queue: 'url-loader',
+        loader: 'url-loader',
         options: {
           limit: 10000,
           name: utils.assetsPath('fonts/[name].[hash:7].[ext]')

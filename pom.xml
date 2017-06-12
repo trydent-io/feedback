@@ -22,6 +22,7 @@
 
 		<jooby.version>1.1.2</jooby.version>
 		<kotlin.version>1.1.2</kotlin.version>
+		<application.class>io.trydent.FeedbackKt</application.class>
 	</properties>
 
     <dependencies>
@@ -47,6 +48,7 @@
     </dependencies>
 
 	<build>
+		<finalName>feedback</finalName>
 		<sourceDirectory>src/main/kotlin</sourceDirectory>
 		<testSourceDirectory>src/test/kotlin</testSourceDirectory>
 		<plugins>
@@ -68,6 +70,22 @@
 						<goals>
 							<goal>test-compile</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.0.0</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<finalName>feedback</finalName>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

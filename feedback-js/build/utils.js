@@ -13,7 +13,7 @@ exports.cssLoaders = function (options) {
   options = options || {}
 
   var cssLoader = {
-    queue: 'css-loader',
+    loader: 'css-loader',
     options: {
       minimize: process.env.NODE_ENV === 'production',
       sourceMap: options.sourceMap
@@ -25,7 +25,7 @@ exports.cssLoaders = function (options) {
     var loaders = [cssLoader]
     if (loader) {
       loaders.push({
-        queue: loader + '-loader',
+        loader: loader + '-loader',
         options: Object.assign({}, loaderOptions, {
           sourceMap: options.sourceMap
         })
