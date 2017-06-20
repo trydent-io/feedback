@@ -23,7 +23,8 @@ const spriteSheet = (images) => {
     },
     animations: {
       [Animations.standing]: { frames: [0] },
-      [Animations.walking]: [1, 12, Animations.walking, 0.200]
+      [Animations.walking]: [1, 12, Animations.walking, 0.200],
+      [Animations.turning]: [13, 22, Animations.walking, 0.200]
     }
   })
 }

@@ -49,7 +49,7 @@
   }
 
   body {
-    background-color: #434A54 !important;
+    background-color: #2c3e50 !important;
     display: flex;
     justify-content: center;
     align-content: center;
