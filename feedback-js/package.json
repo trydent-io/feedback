@@ -15,6 +15,7 @@
     "createjs-preloadjs": "^0.6.3",
     "rxjs": "^5.4.1",
     "semantic-ui-css": "^2.2.10",
+    "underscore": "^1.8.3",
     "vue": "^2.3.3"
   },
   "devDependencies": {

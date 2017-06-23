@@ -1,105 +1,75 @@
-import * as sprite from './doumun-sprite'
-import keyCodes from '../engine/keyboard'
+import {Action, XAnimation, XSprite} from './doumun-sprite'
+import {keys, LEFT_ARROW, RIGHT_ARROW, SHIFT, UP_ARROW} from '../engine/keyboard'
 
-const Animations = sprite.Animations
+export const BRADLEY_ID = 'conrad'
 
-export default {
-  manifest: sprite.Manifest,
-  sprite: null,
+const STANDING = 'standing'
+const WALKING = 'walking'
+const TURNING = 'turning'
+const JUMPING_FW = 'jumpingFW'
 
-  lastFrame: -1,
-  currentFrame () { return this.sprite.currentAnimationFrame },
+const ANIMATIONS = {
+  [STANDING]: new XAnimation(0),
+  [WALKING]: new XAnimation(1, 12, 0.200, WALKING),
+  [TURNING]: new XAnimation(13, 22, 0.200, WALKING),
+  [JUMPING_FW]: new XAnimation(23, 42, 0.200, STANDING)
+}
 
-  movement: 0,
-  isLeft () { return this.sprite.scaleX === -1 },
-  isRight () { return !this.isLeft() },
-  flip () { this.sprite.scaleX *= -1 },
+ANIMATIONS[JUMPING_FW].movement = 2
 
-  pressingKeys: {
-    [keyCodes.leftArrow]: false,
-    [keyCodes.rightArrow]: false,
-    [keyCodes.upArrow]: false,
-    [keyCodes.downArrow]: false,
-    [keyCodes.spacebar]: false,
-    [keyCodes.ctrl]: false,
-    [keyCodes.shift]: false,
-    [keyCodes.alt]: false
-  },
-  noKeys () {
-    let none = true
-    for (let key in this.pressingKeys) none &= !this.pressingKeys[key]
-    return none
-  },
+const FRAMES = {
+  x: 0,
+  y: 0,
+  width: 320,
+  height: 156
+}
 
-  // *** STATES ***
-  mustWalk () { return ((this.pressingKeys[keyCodes.leftArrow] && this.isLeft()) || (this.pressingKeys[keyCodes.rightArrow] && this.isRight())) && (this.isStanding()) },
-  mustStand () { return (this.noKeys() && this.isWalking() && (this.atFrame(12 / 2) || this.atFrame(12))) },
-  mustTurn () { return (((this.isLeft() && this.pressingKeys[keyCodes.rightArrow]) || (this.isRight() && this.pressingKeys[keyCodes.leftArrow])) && this.isStanding()) },
+export function Bradley (image) {
+  XSprite.call(this, image, 160, FRAMES.height, FRAMES, ANIMATIONS, STANDING)
 
-  betweenFrames (from, to) {
-    return this.sprite.currentAnimationFrame >= from && this.sprite.currentAnimationFrame <= to
-  },
-  atFrame (frame) { return this.betweenFrames(frame - 0.100, frame + 0.100) },
+  Object.defineProperties(this, {
+    id: {get: () => BRADLEY_ID},
+    isStanding: {get: () => this.is(STANDING)},
+    isWalking: {get: () => this.is(WALKING)},
+    isTurning: {get: () => this.is(TURNING)},
+    isJumpingFw: {get: () => this.is(JUMPING_FW)},
 
-  is (animation) { return this.sprite.currentAnimation === animation },
-  isWalking () { return this.is(Animations.walking) },
-  isStanding () { return this.is(Animations.standing) },
-  isTurning () { return this.is(Animations.turning) },
+    mustWalk: {get: () => ((keys[RIGHT_ARROW] && this.isRight) || (keys[LEFT_ARROW] && this.isLeft)) && this.isStanding},
+    doneWalkStep: {get: () => this.isWalking && (this.atMidFrame || this.atLastFrame)},
+    mustStand: {get: () => (keys.none && this.doneWalkStep)},
+    mustJumpFw: {get: () => keys[UP_ARROW] && keys[SHIFT] && this.isStanding},
+    mustTurn: {get: () => ((keys[RIGHT_ARROW] && this.isLeft) || (keys[LEFT_ARROW] && this.isRight)) && (this.isStanding || this.doneWalkStep)},
+    endedTurn: {get: () => (this.isTurning && this.atLastFrame)}
+  })
 
-  play (animation, movement) {
-    if (movement === 0) this.printPosition()
-    // this.movement = movement
-    this.movement = Math.trunc(movement)
-    // this.sprite.x += this.movement
-    this.sprite.gotoAndPlay(animation)
-    this.lastFrame = this.sprite.currentAnimationFrame
-    // this.printPosition()
-  },
-  stand () { this.play(Animations.standing, 0) },
-  walk () { this.play(Animations.walking, 128 / (12 * (1 / 0.200))) },
-  turn () { this.play(Animations.turning, 0) },
+  this.stand = () => this.play(STANDING)
+  this.walk = () => this.play(WALKING)
+  this.turn = () => {
+    this.play(TURNING)
+  }
 
-  printPosition () {
-    console.log(`Current frame: ${this.sprite.currentAnimationFrame}, position: ${this.sprite.x + this.sprite.getBounds().width / 2}`)
-  },
+  this.ticked = playground => {
+    Action(this.isWalking && this.changedTimeFrame, this.move)
 
-  loaded (assets, stage) {
-    const images = [assets.get(sprite.Manifest.id)]
-    this.sprite = sprite.init(images, Animations.standing)
+    Action(this.mustWalk, this.walk)
+    Action(this.mustStand, this.stand)
+    Action(this.mustTurn, this.turn)
 
-    this.sprite.regX = this.sprite.getBounds().width / 2
-    this.sprite.regY = this.sprite.getBounds().height
-    this.sprite.x = 32
-    this.sprite.y = 32 * 27
+    Action(this.mustJumpFw, () => this.play(JUMPING_FW))
+    Action(this.isJumpingFw && this.betweenFrame(7, 11), () => this.move())
+    Action(this.isJumpingFw && this.atLastFrame, () => { this.x += (102 + (4 * 5 * 2)) * this.scaleX })
 
-    return this
-  },
-  ticked (playground) {
-    if (this.isWalking() && (this.lastFrame !== this.sprite.currentAnimationFrame)) {
-      this.lastFrame = this.sprite.currentAnimationFrame
-      // this.frameChanged(playground)
-      this.sprite.x += (this.movement * this.sprite.scaleX)
-      // this.printPosition()
-    }
-
-    if (this.mustWalk()) this.walk()
-    if (this.mustStand()) this.stand()
-    if (this.mustTurn()) this.turn()
-    if (this.isTurning() && this.atFrame(10)) {
+    Action(this.endedTurn, () => {
       this.flip()
-      if (this.pressingKeys[keyCodes.leftArrow] || this.pressingKeys[keyCodes.rightArrow]) {
-        this.walk()
-      } else if (this.noKeys()) {
-        this.stand()
-      }
-    }
+      this.stand()
+    })
 
-    if (this.pressingKeys[keyCodes.spacebar]) this.sprite.x = 32 - (this.sprite.getBounds().width / 2)
-  },
-  keyUp (event) {
-    this.pressingKeys[event.keyCode] = false
-  },
-  keyDown (event) {
-    this.pressingKeys[event.keyCode] = true
+    this.lastFrame = this.timeFrame
+    // if (this.mustWalk()) this.walk()
+    // Action(this.mustStand, this.stand)
+    // Action(this.mustTurn, this.turn)
   }
 }
+
+Bradley.prototype = Object.create(XSprite.prototype)
+Bradley.prototype.constructor = Bradley

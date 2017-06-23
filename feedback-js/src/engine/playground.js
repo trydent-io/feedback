@@ -1,5 +1,6 @@
 import createjs from 'createjs-easeljs'
 import 'createjs-preloadjs'
+import { keys } from './keyboard'
 
 const assets = new createjs.LoadQueue(false)
 
@@ -11,9 +12,7 @@ export default {
   stages: [],
   debug: {},
 
-  get (id) {
-    return this.assets.getResult(id)
-  },
+  get (id) { return this.assets.getResult(id) },
 
   loaded () {
     this.playground = new createjs.Stage('playground')
@@ -35,19 +34,6 @@ export default {
     this.playground.update()
   },
 
-  keyDown (event) {
-    for (let s of this.stages) {
-      if (s.keyDown !== undefined) {
-        s.keyDown(event, this.playground)
-      }
-    }
-  },
-  keyUp (event) {
-    this.stages
-      .filter(s => s.keyUp !== undefined)
-      .forEach(s => s.keyUp(event, this.playground))
-  },
-
   load () {
     this.stages
       .filter(s => s.beforeLoad !== undefined)
@@ -56,7 +42,7 @@ export default {
     this.assets.addEventListener('complete', () => this.loaded())
     this.assets.loadManifest(this.manifest, true, '/static/')
 
-    document.onkeydown = event => this.keyDown(event)
-    document.onkeyup = event => this.keyUp(event)
+    document.onkeydown = event => keys.downed(event)
+    document.onkeyup = event => keys.upped(event)
   }
 }

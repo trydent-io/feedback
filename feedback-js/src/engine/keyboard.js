@@ -1,166 +1,177 @@
-const keyCodes = {
-  break: 3,
-  backspace: 8,
-  tab: 9,
-  clear: 12,
-  enter: 13,
-  shift: 16,
-  ctrl: 17,
-  alt: 18,
-  pause: 19,
-  capsLock: 20,
-  escape: 27,
-  conversion: 28,
-  nonConversion: 29,
-  spacebar: 32,
-  pageUp: 33,
-  pageDown: 34,
-  end: 35,
-  home: 36,
-  leftArrow: 37,
-  upArrow: 38,
-  rightArrow: 39,
-  downArrow: 40,
-  select: 41,
-  print: 42,
-  execute: 43,
-  printScreen: 44,
-  insert: 45,
-  delete: 46,
-  n0: 48,
-  n1: 49,
-  n2: 50,
-  n3: 51,
-  n4: 52,
-  n5: 53,
-  n6: 54,
-  n7: 55,
-  n8: 56,
-  n9: 57,
-  colon: 58,
-  semicolon: 59,
-  minor: 60,
-  equals: 61,
-  beta: 63,
-  at: 64,
-  a: 65,
-  b: 66,
-  c: 67,
-  d: 68,
-  e: 69,
-  f: 70,
-  g: 71,
-  h: 72,
-  i: 73,
-  j: 74,
-  k: 75,
-  l: 76,
-  m: 77,
-  n: 78,
-  o: 79,
-  p: 80,
-  q: 81,
-  r: 82,
-  s: 83,
-  t: 84,
-  u: 85,
-  v: 86,
-  w: 87,
-  x: 88,
-  y: 89,
-  z: 90,
-  leftSuper: 91,
-  rightSuper: 92,
-  menu: 93,
-  numpad0: 96,
-  numpad1: 97,
-  numpad2: 98,
-  numpad3: 99,
-  numpad4: 100,
-  numpad5: 101,
-  numpad6: 102,
-  numpad7: 103,
-  numpad8: 104,
-  numpad9: 105,
-  numpadMultiply: 106,
-  numpadAdd: 107,
-  numpadPeriod: 108,
-  numpadSubtract: 109,
-  decimalPoint: 110,
-  numpadDivide: 111,
-  f1: 112,
-  f2: 113,
-  f3: 114,
-  f4: 115,
-  f5: 116,
-  f6: 117,
-  f7: 118,
-  f8: 119,
-  f9: 120,
-  f10: 121,
-  f11: 122,
-  f12: 123,
-  f13: 124,
-  f14: 125,
-  f15: 126,
-  f16: 127,
-  f17: 128,
-  f18: 129,
-  f19: 130,
-  f20: 131,
-  f21: 132,
-  f22: 133,
-  f23: 134,
-  f24: 135,
-  numLock: 144,
-  scrollLock: 145,
-  upper: 160,
-  exclamation: 161,
-  sharp: 163,
-  dollar: 164,
-  ugrave: 165,
-  pageBackward: 166,
-  pageForward: 167,
-  closingParen: 169,
-  multiply: 170,
-  tilde: 171,
-  minus: 173,
-  decreaseVolume: 174,
-  increaseVolume: 175,
-  next: 176,
-  previous: 177,
-  stop: 178,
-  play: 179,
-  email: 180,
-  mute: 181
-  // decrease volume level (firefox): 182,
-  // increase volume level (firefox): 183,
-  // semi-colon / ñ: 186,
-  // equal sign: 187,
-  // comma: 188,
-  // dash: 189,
-  // period: 190,
-  // forward slash / ç: 191,
-  // grave accent / ñ / æ: 192,
-  // ?, / or °: 193,
-  // numpad period (chrome): 194,
-  // open bracket: 219,
-  // back slash: 220,
-  // close bracket / å: 221,
-  // single quote / ø: 222,
-  // `: 223,
-  // left or right ⌘ key (firefox): 224,
-  // altgr: 225,
-  // < /git >: 226,
-  // GNOME Compose Key: 230,
-  // ç: 231,
-  // XF86Forward: 233,
-  // XF86Back: 234,
-  // alphanumeric: 240,
-  // hiragana/katakana: 242,
-  // half-width/full-width: 243,
-  // kanji: 244,
-  // 255: toggle touchpad
-}
+import _ from 'underscore'
 
-export default keyCodes
+export const BREAK = 3
+export const BACKSPACE = 8
+export const TAB = 9
+export const CLEAR = 12
+export const ENTER = 13
+export const SHIFT = 16
+export const CTRL = 17
+export const ALT = 18
+export const PAUSE = 19
+export const CAPSLOCK = 20
+export const ESCAPE = 27
+export const CONVERSION = 28
+export const NONCONVERSION = 29
+export const SPACEBAR = 32
+export const PAGE_UP = 33
+export const PAGE_DOWN = 34
+export const END = 35
+export const HOME = 36
+export const LEFT_ARROW = 37
+export const UP_ARROW = 38
+export const RIGHT_ARROW = 39
+export const DOWN_ARROW = 40
+export const SELECT = 41
+export const PRINT = 42
+export const EXECUTE = 43
+export const PRINT_SCREEN = 44
+export const INSERT = 45
+export const DEL = 46
+export const N0 = 48
+export const N1 = 49
+export const N2 = 50
+export const N3 = 51
+export const N4 = 52
+export const N5 = 53
+export const N6 = 54
+export const N7 = 55
+export const N8 = 56
+export const N9 = 57
+export const COLON = 58
+export const SEMICOLON = 59
+export const MINOR = 60
+export const EQUALS = 61
+export const BETA = 63
+export const AT = 64
+export const A = 65
+export const B = 66
+export const C = 67
+export const D = 68
+export const E = 69
+export const F = 70
+export const G = 71
+export const H = 72
+export const I = 73
+export const J = 74
+export const K = 75
+export const L = 76
+export const M = 77
+export const N = 78
+export const O = 79
+export const P = 80
+export const Q = 81
+export const R = 82
+export const S = 83
+export const T = 84
+export const U = 85
+export const V = 86
+export const W = 87
+export const X = 88
+export const Y = 89
+export const Z = 90
+export const LEFTSUPER = 91
+export const RIGHTSUPER = 92
+export const MENU = 93
+export const NUMPAD0 = 96
+export const NUMPAD1 = 97
+export const NUMPAD2 = 98
+export const NUMPAD3 = 99
+export const NUMPAD4 = 100
+export const NUMPAD5 = 101
+export const NUMPAD6 = 102
+export const NUMPAD7 = 103
+export const NUMPAD8 = 104
+export const NUMPAD9 = 105
+export const NUMPADMULTIPLY = 106
+export const NUMPADADD = 107
+export const NUMPADPERIOD = 108
+export const NUMPADSUBTRACT = 109
+export const DECIMALPOINT = 110
+export const NUMPADDIVIDE = 111
+export const F1 = 112
+export const F2 = 113
+export const F3 = 114
+export const F4 = 115
+export const F5 = 116
+export const F6 = 117
+export const F7 = 118
+export const F8 = 119
+export const F9 = 120
+export const F10 = 121
+export const F11 = 122
+export const F12 = 123
+export const F13 = 124
+export const F14 = 125
+export const F15 = 126
+export const F16 = 127
+export const F17 = 128
+export const F18 = 129
+export const F19 = 130
+export const F20 = 131
+export const F21 = 132
+export const F22 = 133
+export const F23 = 134
+export const F24 = 135
+export const NUMLOCK = 144
+export const SCROLLLOCK = 145
+export const UPPER = 160
+export const EXCLAMATION = 161
+export const SHARP = 163
+export const DOLLAR = 164
+export const UGRAVE = 165
+export const PAGE_BACKWARD = 166
+export const PAGE_FORWARD = 167
+export const CLOSING_PAREN = 169
+export const MULTIPLY = 170
+export const TILDE = 171
+export const MINUS = 173
+export const DECREASE_VOLUME = 174
+export const INCREASE_VOLUME = 175
+export const NEXT = 176
+export const PREVIOUS = 177
+export const STOP = 178
+export const PLAY = 179
+export const EMAIL = 180
+export const MUTE = 181
+// decrease volume level (firefox) = 182
+// increase volume level (firefox) = 183
+// semi-colon / ñ = 186
+// equal sign = 187
+// comma = 188
+// dash = 189
+// period = 190
+// forward slash / ç = 191
+// grave accent / ñ / æ = 192
+// ? / or ° = 193
+// numpad period (chrome) = 194
+// open bracket = 219
+// back slash = 220
+// close bracket / å = 221
+// single quote / ø = 222
+// ` = 223
+// left or right ⌘ key (firefox) = 224
+// altgr = 225
+// < /git > = 226
+// GNOME Compose Key = 230
+// ç = 231
+// XF86Forward = 233
+// XF86Back = 234
+// alphanumeric = 240
+// hiragana/katakana = 242
+// half-width/full-width = 243
+// kanji = 244
+// 255 = toggle touchpad
+
+export const keys = {
+  downed (event) {
+    this[event.keyCode] = true
+  },
+  upped (event) {
+    delete this[event.keyCode]
+  },
+
+  get none () {
+    return _.keys(this).length === 3
+  }
+}
