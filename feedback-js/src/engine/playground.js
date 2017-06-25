@@ -22,6 +22,7 @@ export default {
       .forEach(s => s.loaded(this, this.playground))
 
     createjs.Ticker.timingMode = createjs.Ticker.RAF
+    createjs.Ticker.setFPS(60)
     createjs.Ticker.addEventListener('tick', () => this.ticked())
     this.loading = false
   },

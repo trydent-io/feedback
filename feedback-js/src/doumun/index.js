@@ -1,5 +1,5 @@
 import {Action, XAnimation, XSprite} from './doumun-sprite'
-import {keys, LEFT_ARROW, RIGHT_ARROW, SHIFT, UP_ARROW} from '../engine/keyboard'
+import {keys, LEFT_ARROW, RIGHT_ARROW, SHIFT, UP_ARROW, ENTER} from '../engine/keyboard'
 
 export const BRADLEY_ID = 'conrad'
 
@@ -10,12 +10,12 @@ const JUMPING_FW = 'jumpingFW'
 
 const ANIMATIONS = {
   [STANDING]: new XAnimation(0),
-  [WALKING]: new XAnimation(1, 12, 0.200, WALKING),
-  [TURNING]: new XAnimation(13, 22, 0.200, WALKING),
-  [JUMPING_FW]: new XAnimation(23, 42, 0.200, STANDING)
+  [WALKING]: new XAnimation(1, 12, 0.400, WALKING),
+  [TURNING]: new XAnimation(13, 22, 0.400),
+  [JUMPING_FW]: new XAnimation(23, 42, 0.400, STANDING)
 }
 
-ANIMATIONS[JUMPING_FW].movement = 2
+ANIMATIONS[JUMPING_FW].movement = 6
 
 const FRAMES = {
   x: 0,
@@ -39,7 +39,7 @@ export function Bradley (image) {
     mustStand: {get: () => (keys.none && this.doneWalkStep)},
     mustJumpFw: {get: () => keys[UP_ARROW] && keys[SHIFT] && this.isStanding},
     mustTurn: {get: () => ((keys[RIGHT_ARROW] && this.isLeft) || (keys[LEFT_ARROW] && this.isRight)) && (this.isStanding || this.doneWalkStep)},
-    endedTurn: {get: () => (this.isTurning && this.atLastFrame)}
+    endedTurn: {get: () => this.isTurning && this.frameIndex === 23}
   })
 
   this.stand = () => this.play(STANDING)
@@ -49,25 +49,36 @@ export function Bradley (image) {
   }
 
   this.ticked = playground => {
-    Action(this.isWalking && this.changedTimeFrame, this.move)
+/*
+    Action(this.changedTimedFrame, () => console.log(`
+      Frame: ${this.timedFrame},
+      Index: ${this.frameIndex},
+      Anim: ${this.currentAnimation},
+      Len: ${this.animation.length}
+      `))
+*/
+    Action(this.isWalking && this.changedTimedFrame, this.move)
 
     Action(this.mustWalk, this.walk)
     Action(this.mustStand, this.stand)
     Action(this.mustTurn, this.turn)
 
     Action(this.mustJumpFw, () => this.play(JUMPING_FW))
-    Action(this.isJumpingFw && this.betweenFrame(7, 11), () => this.move())
-    Action(this.isJumpingFw && this.atLastFrame, () => { this.x += (102 + (4 * 5 * 2)) * this.scaleX })
+    Action(this.isJumpingFw && this.betweenFrames(7, 12), this.move)
+    Action(this.isJumpingFw && this.betweenFrames(7, 9), () => { this.y -= 4 })
+    Action(this.isJumpingFw && this.betweenFrames(9, 11), () => { this.y += 4 })
+    Action(this.isJumpingFw && this.atLastFrame, () => { this.x += (4 * 32) * this.scaleX })
+
+    Action(keys[ENTER], () => console.log(`Position: ${this.x}`))
 
     Action(this.endedTurn, () => {
       this.flip()
       this.stand()
     })
-
-    this.lastFrame = this.timeFrame
     // if (this.mustWalk()) this.walk()
     // Action(this.mustStand, this.stand)
     // Action(this.mustTurn, this.turn)
+    this.update()
   }
 }
 

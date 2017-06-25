@@ -7,7 +7,7 @@ export const XAnimation = (from, to, mills, next) => ({
   next,
   mills,
   get length () {
-    return to + 1 - from
+    return (to + 1 - from) / mills
   },
   _movement: Math.trunc((to + 1 - from) > 1 ? 128 / ((to + 1 - from) * (1 / mills)) : 0),
   get movement () {
@@ -45,21 +45,30 @@ export function XSprite (image, regX, regY, frames, animations, start) {
   this.regY = regY
   this.animations = animations
   this.lastFrame = -1
+  this.frameIndex = 0
+
+  this.update = () => {
+    if (this.lastFrame !== this.timedFrame) {
+      this.lastFrame = this.timedFrame
+      this.frameIndex++
+    }
+    if (this.frameIndex === this.animation.length) this.frameIndex = 0
+  }
 
   this.flip = () => { this.scaleX *= -1 }
 
-  this.betweenTimeFrames = (from, to) => this.timeFrame >= from && this.timeFrame <= to
-  this.betweenFrame = (from, to) => this.timeFrame >= from && this.timeFrame <= to
+  this.betweenTimedFrames = (from, to) => this.timedFrame >= from && this.timedFrame <= to
+  this.betweenFrames = (from, to) => Math.trunc(this.timedFrame) >= from && Math.trunc(this.timedFrame) <= to
   this.atFrame = index => {
-    const time = this.animation.mills / 2
-    return this.betweenTimeFrames(index - time, index + time)
+    // const time = this.animation.mills / 2
+    return this.betweenTimedFrames(index - (this.animation.mills - 0.100), index + (this.animation.mills - 0.100))
   }
 
   this.move = () => { this.x += this.scaleX * this.movement }
   this.is = animation => this.currentAnimation === animation
   this.play = animation => {
     this.gotoAndPlay(animation)
-    this.lastFrame = this.currentAnimationFrame
+    this.frameIndex = 0
   }
 
   Object.defineProperties(this, {
@@ -72,11 +81,11 @@ export function XSprite (image, regX, regY, frames, animations, start) {
     animation: {get: () => this.animations[this.currentAnimation]},
     movement: {get: () => this.animation.movement},
 
-    timeFrame: {get: () => this.currentAnimationFrame},
-    changedTimeFrame: {get: () => this.lastFrame !== this.timeFrame},
+    timedFrame: {get: () => this.currentAnimationFrame},
+    changedTimedFrame: {get: () => this.lastFrame !== this.timedFrame},
 
-    atMidFrame: {get: () => this.atFrame(this.animation.length / 2)},
-    atLastFrame: {get: () => this.atFrame(this.animation.length)}
+    atMidFrame: {get: () => this.frameIndex === (this.animation.length / 2) - 1},
+    atLastFrame: {get: () => this.frameIndex === this.animation.length - 1}
   })
 }
 
