@@ -12,11 +12,11 @@ const ANIMATIONS = {
   [STANDING]: new XAnimation(0),
   [WALKING]: new XAnimation(1, 12, 0.300, WALKING),
   [TURNING]: new XAnimation(13, 22, 0.300, STANDING),
-  [JUMPING_FW]: new XAnimation(23, 42, 0.300, JUMPING_FW)
+  [JUMPING_FW]: new XAnimation(23, 42, 0.300, STANDING)
 }
 
 ANIMATIONS[WALKING].movement = 32 / (11 * (1 / 0.300))
-ANIMATIONS[JUMPING_FW].movement = 16
+// ANIMATIONS[JUMPING_FW].movement = 16
 
 const FRAMES = {
   x: 0,
@@ -76,12 +76,13 @@ export function Bradley (image) {
     Action(this.mustTurn, this.turn)
 
     Action(this.mustJumpFw, this.jumpFw)
-    Action(this.isJumpingFw && this.betweenFrames(7, 12), () => { this.x += (120 / (6 * (1 / this.animations[JUMPING_FW].mills))) * this.scaleX })
+    Action(this.isJumpingFw && (this.changedTimedFrame || this.frameIndex === 0), () => console.log(`Timed frame: ${this.timedFrame}, frame: ${this.frameIndex}`))
+    Action(this.isJumpingFw && this.betweenFrames(7, 12), () => { this.x += (112 / (6 * (1 / this.animations[JUMPING_FW].mills))) * this.scaleX })
     Action(this.isJumpingFw && this.betweenFrames(7, 9), () => { this.y -= 4 })
     Action(this.isJumpingFw && this.betweenFrames(9, 11), () => { this.y += 4 })
-    Action(this.isJumpingFw && this.frameIndex === 64, () => {
+    Action(this.isJumpingFw && this.frameIndex === 65, () => {
       this.stand()
-      this.x += (128 + 8) * this.scaleX
+      this.x += (128 + 16) * this.scaleX
     })
 
     Action(keys[ENTER], () => console.log(`Position: ${this.x}`))
