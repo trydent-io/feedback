@@ -1,4 +1,4 @@
-import {Action, XAnimation, XSprite} from '../engine/xsprite'
+import {Action, XAnimation, XSprite, XFrames} from '../engine/xsprite'
 import {keys, LEFT_ARROW, RIGHT_ARROW, SHIFT, UP_ARROW, DOWN_ARROW, ENTER, SPACEBAR, N1, N2} from '../engine/keyboard'
 
 export const BRADLEY_ID = 'conrad'
@@ -8,27 +8,33 @@ const WALKING = 'walking'
 const TURNING = 'turning'
 const JUMPING_FW = 'jumpingFW'
 const GOING_DW = 'goingDW'
+const GOING_UP = 'goingUP'
 
 const ANIMATIONS = {
   [STANDING]: new XAnimation(0),
   [WALKING]: new XAnimation(1, 12, 0.300, WALKING),
   [TURNING]: new XAnimation(13, 22, 0.300, STANDING),
   [JUMPING_FW]: new XAnimation(23, 42, 0.300, STANDING),
-  [GOING_DW]: new XAnimation(43, 67, 0.300, STANDING)
+  [GOING_DW]: new XAnimation(43, 67, 0.300, STANDING),
+  [GOING_UP]: new XAnimation(43, 67, 0.300, STANDING, true)
 }
 
 ANIMATIONS[WALKING].movement = 32 / (11 * (1 / 0.300))
 // ANIMATIONS[JUMPING_FW].movement = 16
 
-const FRAMES = {
+const FRAMES = XFrames(0, 0, 215, 340, 0, 1, 68)
+
+/*
+const FRAMES1 = {
   x: 0,
   y: 0,
   width: 215,
   height: 340
 }
+*/
 
 export function Bradley (image) {
-  XSprite.call(this, image, 47, 156, FRAMES, ANIMATIONS, STANDING)
+  XSprite.call(this, image, 55, 156, FRAMES, ANIMATIONS, STANDING)
 
   Object.defineProperties(this, {
     id: {get: () => BRADLEY_ID},
@@ -49,6 +55,7 @@ export function Bradley (image) {
     doneWalkStep: {get: () => this.isWalking && (this.atMidFrame || this.atLastFrame)},
     mustJumpFw: {get: () => keys[UP_ARROW] && keys[SHIFT] && this.isStanding},
     mustGoDw: {get: () => keys[DOWN_ARROW] && keys[SHIFT] && this.isStanding},
+    mustGoUp: {get: () => keys[UP_ARROW] && keys[SHIFT] && this.isGoingDw && this.frameIndex === 83},
     mustTurn: {get: () => this.isReversalPressed && this.isStanding},
     endedTurn: {get: () => this.isTurning && this.frameIndex === 23},
     endedGoDw: {get: () => this.isGoingDw && this.frameIndex === 82}
@@ -59,6 +66,7 @@ export function Bradley (image) {
   this.turn = () => this.play(TURNING)
   this.jumpFw = () => this.play(JUMPING_FW)
   this.goDw = () => this.play(GOING_DW)
+  this.goUp = () => this.play(GOING_UP)
 
   this.ticked = playground => {
 /*
@@ -92,20 +100,20 @@ export function Bradley (image) {
     })
 
     Action(keys[ENTER], () => console.log(`Position: ${this.x}`))
-    Action(keys[SPACEBAR], () => { this.x = 32 })
     Action(keys[N1], () => console.log(`Walking length: ${ANIMATIONS[WALKING].length}`))
     Action(keys[N2], () => console.log(`Going Dw length: ${ANIMATIONS[GOING_DW].length}`))
-
     Action(this.endedTurn, () => {
       this.flip()
       this.stand()
     })
 
-    Action(this.mustGoDw, this.goDw)
-    Action(this.endedGoDw, () => {
-      this.stop()
-      console.log('Stoppa')
+    Action(keys[SPACEBAR], () => {
+      console.log(`Animation: ${this.currentAnimation}, Frame: ${this.frameIndex}`)
     })
+
+    Action(this.mustGoDw, this.goDw)
+    Action(this.endedGoDw, () => this.stop())
+    Action(this.mustGoUp, this.goUp)
     // if (this.mustWalk()) this.walk()
     // Action(this.mustStand, this.stand)
     // Action(this.mustTurn, this.turn)

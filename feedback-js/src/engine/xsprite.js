@@ -1,11 +1,27 @@
 import createjs from 'createjs-easeljs'
 import _ from 'underscore'
 
-export const XAnimation = (from, to, mills, next) => ({
+export const XFrames = (x, y, width, height, image, rows, cols) => {
+  image = image || 0
+  rows = rows || 1
+  cols = cols || 1
+  let frames = []
+
+  for (let yi = y; yi < (height * rows); yi += height) {
+    for (let xi = x; xi < (width * cols); xi += width) {
+      frames.push([xi, yi, width, height, image])
+    }
+  }
+
+  return frames
+}
+
+export const XAnimation = (from, to, mills, next, backward) => ({
   from,
   to,
   next,
   mills,
+  backward: backward || false,
   get length () {
     return (to + 1 - from) / mills
   },
@@ -17,9 +33,24 @@ export const XAnimation = (from, to, mills, next) => ({
     this._movement = value
   },
   get pattern () {
-    return this.length > 1
-      ? [this.from, this.to, this.next, this.mills]
-      : {frames: [0]}
+    let pattern = {frames: [0]}
+
+    if (this.length > 1) {
+      let frames = []
+      for (let frame = from; frame <= to; frame++) {
+        frames.push(frame)
+      }
+
+      if (this.backward) frames.reverse()
+
+      pattern = {
+        frames,
+        next: this.next,
+        speed: this.mills
+      }
+    }
+
+    return pattern
   }
 })
 
@@ -57,7 +88,7 @@ export function XSprite (image, regX, regY, frames, animations, start) {
 
   this.flip = () => {
     this.scaleX *= -1
-    this.regX = this.scaleX < 0 ? 58 : 42
+    // this.regX = this.scaleX < 0 ? 58 : 39
   }
 
   this.betweenTimedFrames = (from, to) => this.timedFrame >= from && this.timedFrame <= to
