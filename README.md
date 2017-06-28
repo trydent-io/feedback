@@ -6,7 +6,7 @@
 
 Inspired by [Jonanthan Cooper](https://twitter.com/GameAnim)'s [article](http://www.gameanim.com/2005/06/15/flashback-a-study-in-standards/) and the disappointing [Flashback remake](http://store.steampowered.com/app/245730/Flashback/) released some time ago, I wanted to try to implement my own version of Dolphin Software game.
 However time flies and a lot of things happened in between, so I just tried to develop a simple demo - named Feedback - by using [CreateJS](http://createjs.com/) and the Conrad-sprite from the Flashback MacOS version at least
-(kindly provided me by [Gregory Montoir](https://github.com/cyxx) many thank!).
+(kindly provided me by [Gregory Montoir](https://github.com/cyxx) many thanks!).
       
 ## Repository
 * Fork the [Feedback repo](https://github.com/trystick/feedback)
