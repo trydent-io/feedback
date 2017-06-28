@@ -1,9 +1,10 @@
 import createjs from 'createjs-easeljs'
-import {Bradley, BRADLEY_ID} from '../doumun'
+import {Bradley, BRADLEY_ID} from '../sprite/bradley'
 
 const manifest = (id) => ({id: id, src: `${id}.png`})
 
 const BACKGROUND = manifest('background')
+const FEEDBACK = manifest('feedback_logo')
 const LEVEL1 = manifest('level1')
 const ENTRANCE_FRONT = manifest('entrance_front')
 const RECEPTIONIST = manifest('receptionist')
@@ -13,9 +14,9 @@ const BRADLEY = manifest(BRADLEY_ID)
 
 export default {
   beforeLoad (assets) {
-    console.log('Before the load!')
     assets.manifest = [
       BACKGROUND,
+      FEEDBACK,
       LEVEL1,
       TREE,
       RECEPTIONIST,
@@ -28,6 +29,18 @@ export default {
     this.background = new createjs.Shape()
     // this.background.graphics.beginBitmapFill(assets.get(BACKGROUND.id)).drawRect(0, 0, stage.canvas.width, stage.canvas.height)
     this.background.graphics.beginBitmapFill(assets.get(LEVEL1.id)).drawRect(0, 0, stage.canvas.width, stage.canvas.height)
+
+    this.feedback = new createjs.Bitmap(assets.get(FEEDBACK.id))
+    this.feedback.regY = 217
+    this.feedback.x = 32
+    this.feedback.y = 32 * 26
+
+/*
+    this.text = new createjs.Text('FEEDBACK', '256px Six Caps', '#FAFAFA')
+    this.text.x = 32
+    this.text.y = 32 * 16
+    this.text.textBaseline = 'alphabetic'
+*/
 /*
     this.entranceFront = new createjs.Bitmap(assets.get(ENTRANCE_FRONT.id))
     this.entranceFront.x = 288 - this.entranceFront.image.width
@@ -54,6 +67,7 @@ export default {
       // this.tree,
       // this.receptionist,
       this.bradley,
+      this.feedback
       // this.entranceFront,
       // this.officialEntrance
     )

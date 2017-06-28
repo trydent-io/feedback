@@ -55,7 +55,10 @@ export function XSprite (image, regX, regY, frames, animations, start) {
     if (this.frameIndex === this.animation.length) this.frameIndex = 0
   }
 
-  this.flip = () => { this.scaleX *= -1 }
+  this.flip = () => {
+    this.scaleX *= -1
+    this.regX = this.scaleX < 0 ? this.regX * 2 : this.regX / 2
+  }
 
   this.betweenTimedFrames = (from, to) => this.timedFrame >= from && this.timedFrame <= to
   this.betweenFrames = (from, to) => Math.trunc(this.timedFrame) >= from && Math.trunc(this.timedFrame) <= to

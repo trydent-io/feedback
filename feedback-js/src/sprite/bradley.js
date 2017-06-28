@@ -1,4 +1,4 @@
-import {Action, XAnimation, XSprite} from './doumun-sprite'
+import {Action, XAnimation, XSprite} from '../engine/xsprite'
 import {keys, LEFT_ARROW, RIGHT_ARROW, SHIFT, UP_ARROW, ENTER, SPACEBAR, N1, N2} from '../engine/keyboard'
 
 export const BRADLEY_ID = 'conrad'
@@ -21,12 +21,12 @@ ANIMATIONS[WALKING].movement = 32 / (11 * (1 / 0.300))
 const FRAMES = {
   x: 0,
   y: 0,
-  width: 320,
-  height: 200
+  width: 184,
+  height: 156
 }
 
 export function Bradley (image) {
-  XSprite.call(this, image, 160, FRAMES.height, FRAMES, ANIMATIONS, STANDING)
+  XSprite.call(this, image, 16, FRAMES.height, FRAMES, ANIMATIONS, STANDING)
 
   Object.defineProperties(this, {
     id: {get: () => BRADLEY_ID},
