@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/trystick/feedback/master/assets/cover.png" alt="Feedback Logo"/>
+  <img src="https://raw.githubusercontent.com/trystick/feedback/master/assets/feedback_logo.png" alt="Feedback Logo"/>
 </p>
 
 ## Welcome to the official Feedback demo game page
