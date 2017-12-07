@@ -1,6 +1,8 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/trystick/feedback/master/assets/feedback_logo.png" alt="Feedback Logo"/>
-</p>
+<div style="width:100%; background-color:#434A54">
+  <p align="center">
+    <img src="https://raw.githubusercontent.com/trystick/feedback/master/assets/feedback_logo.png" alt="Feedback Logo"/>
+  </p>
+</div>
 
 ## Welcome to the official Feedback demo game page
 
